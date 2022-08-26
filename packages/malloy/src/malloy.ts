@@ -727,11 +727,15 @@ export function parseTableURL(tableURL: string): {
   connectionName?: string;
   tablePath: string;
 } {
-  const [firstPart, secondPart] = tableURL.split(":");
-  if (secondPart) {
-    return { connectionName: firstPart, tablePath: secondPart };
+  if (tableURL.startsWith("https://")) {
+    return { tablePath: tableURL };
+  }
+
+  const [head, ...tail] = tableURL.split(":");
+  if (tail.length > 0) {
+    return { connectionName: head, tablePath: tail.join(":") };
   } else {
-    return { tablePath: firstPart };
+    return { tablePath: head };
   }
 }
 
